@@ -1,0 +1,102 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Mein interaktives Skript",
+    "section": "",
+    "text": "Willkommen\nDieses Skript enthält eine Lehreinheit, in der Sie nicht nur lesen, sondern an mehreren Stellen etwas tun: vorab einschätzen, zuordnen, abrufen. Die Einheit beginnt mit einem kurzen Vorab-Check und endet mit einem Lern-Check.",
+    "crumbs": [
+      "Willkommen"
+    ]
+  },
+  {
+    "objectID": "index.html#so-arbeiten-sie-mit-diesem-skript",
+    "href": "index.html#so-arbeiten-sie-mit-diesem-skript",
+    "title": "Mein interaktives Skript",
+    "section": "So arbeiten Sie mit diesem Skript",
+    "text": "So arbeiten Sie mit diesem Skript\n\nERSETZEN: Hinweise für Ihre Lernenden, zum Beispiel wie lange die Einheit dauert und ob sie zu einer Präsenzsitzung gehört.\n\nPlanen Sie für die Einheit etwa 30 Minuten ein. Ihre Antworten im Vorab-Check speichert nur Ihr eigener Browser; niemand sonst sieht sie.",
+    "crumbs": [
+      "Willkommen"
+    ]
+  },
+  {
+    "objectID": "index.html#transparenzhinweis",
+    "href": "index.html#transparenzhinweis",
+    "title": "Mein interaktives Skript",
+    "section": "Transparenzhinweis",
+    "text": "Transparenzhinweis\n\nERSETZEN: Wofür haben Sie KI genutzt? Ein Satz genügt.\n\nBei der Erstellung dieses Skripts wurde KI genutzt, um Lernspiele zu programmieren und Entwürfe für Fragen vorzuschlagen. Alle Inhalte wurden von der Autorin oder dem Autor geprüft und verantwortet.",
+    "crumbs": [
+      "Willkommen"
+    ]
+  },
+  {
+    "objectID": "lehreinheit.html",
+    "href": "lehreinheit.html",
+    "title": "Der Schwerpunkt",
+    "section": "",
+    "text": "Der Schwerpunkt eines Körpers\nJana Keller, Werkstudentin in einem Stahlbaubetrieb, soll einen L-förmigen Blechzuschnitt mit dem Hallenkran umsetzen. Sie schlägt den Haken dort an, wo sie die Mitte des Blechs vermutet. Beim Anheben kippt das Blech zur Seite und hängt schief am Haken. Der Meister fragt sie, wo der Schwerpunkt des Zuschnitts liegt. Keller kann das nicht abschätzen und fragt sich, wie man diesen Punkt für eine zusammengesetzte Form berechnet.\nAuf jedes Volumenteilchen \\(\\mathrm{d}V\\) eines Körpers wirkt die kleine Gewichtskraft \\(\\gamma\\,\\mathrm{d}V\\); dabei ist \\(\\gamma\\) das spezifische Gewicht. Gesucht ist die eine Kraft \\(G\\), die diesen verteilten Kräften statisch äquivalent ist (Abbildung 1.1). Ihr Betrag ergibt sich durch Aufaddieren aller Teilkräfte, beim homogenen Körper also \\(G = \\gamma\\,V\\). Ihre Wirkungslinie folgt aus der Bedingung, dass \\(G\\) bezüglich jeder Koordinatenachse dasselbe Moment hat wie die verteilten Kräfte. Der Punkt, durch den die Wirkungslinie bei jeder Richtung der Schwerkraft geht, heißt Schwerpunkt \\(S\\).\nBeim homogenen Körper kürzt sich \\(\\gamma\\) heraus, und es bleibt\n\\[\nx_s = \\frac{\\int x\\,\\mathrm{d}V}{\\int \\mathrm{d}V}, \\qquad\ny_s = \\frac{\\int y\\,\\mathrm{d}V}{\\int \\mathrm{d}V}, \\qquad\nz_s = \\frac{\\int z\\,\\mathrm{d}V}{\\int \\mathrm{d}V}.\n\\]\nDer Schwerpunkt ist dann der Volumenmittelpunkt und hängt nur von der Form ab. Zwei Sonderfälle sparen Rechenarbeit. Besitzt der Körper eine Symmetrieachse, liegt \\(S\\) auf ihr. Bei einer Scheibe mit konstanter Dicke \\(t\\) gilt \\(\\mathrm{d}V = t\\,\\mathrm{d}A\\); die Dicke kürzt sich, und man erhält den Flächenschwerpunkt\n\\[\nx_s = \\frac{\\int x\\,\\mathrm{d}A}{\\int \\mathrm{d}A}, \\qquad\ny_s = \\frac{\\int y\\,\\mathrm{d}A}{\\int \\mathrm{d}A}.\n\\]",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Der Schwerpunkt</span>"
+    ]
+  },
+  {
+    "objectID": "lehreinheit.html#sec-abschnitt-1",
+    "href": "lehreinheit.html#sec-abschnitt-1",
+    "title": "Der Schwerpunkt",
+    "section": "",
+    "text": "ROHENTWURF der KI: Der Text dieses Abschnitts ist ein Entwurf nach Ihrem Foliensatz. Prüfen Sie ihn fachlich, überarbeiten Sie ihn in Ihren Worten und löschen Sie danach diesen Kasten.\n\n\n\n\n\n\n\n\nAbbildung 1.1: Die verteilten Gewichtskräfte (links) werden durch die statisch äquivalente Gewichtskraft \\(G\\) im Schwerpunkt \\(S\\) ersetzt (rechts). Erstellt mit Claude.\n\n\n\n\n\n\n\n\n\n\n\n\n\nTippLernspiel: Grundbegriffe zum Schwerpunkt\n\n\n\nMit diesem Memory rufen Sie die acht Grundbegriffe der Einheit aus dem Gedächtnis ab (Lernziel 1). Decken Sie je zwei Karten auf und finden Sie zu jedem Begriff die passende Definition; einige Begriffe werden erst in den folgenden Abschnitten erklärt, legen Sie sich trotzdem fest. Nach jedem Versuch erklärt die Rückmeldung, warum die beiden Karten zusammengehören oder nicht.\n\n\n\n\n\n\n\n\n\n\nTippIhre Einschätzung prüfen\n\n\n\n„Der Schwerpunkt eines Körpers ist immer sein geometrischer Mittelpunkt.“ \nAuflösung: teils. Das gilt nur für homogene Körper mit konstanter Dichte; dann fällt der Schwerpunkt mit dem Volumenmittelpunkt zusammen. Ist das Gewicht ungleichmäßig verteilt, verschiebt sich der Schwerpunkt zur schwereren Seite.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Der Schwerpunkt</span>"
+    ]
+  },
+  {
+    "objectID": "lehreinheit.html#sec-abschnitt-2",
+    "href": "lehreinheit.html#sec-abschnitt-2",
+    "title": "Der Schwerpunkt",
+    "section": "Der Schwerpunkt zusammengesetzter Flächen",
+    "text": "Der Schwerpunkt zusammengesetzter Flächen\n\n\n\n\n\n\nHinweisVorhersage: Wo liegt der Schwerpunkt?\n\n\n\n\n\n\nL-Fläche aus zwei Rechtecken, Maße in mm\n\n\nDiese Aufgabe steht absichtlich vor der Erklärung des Rechenwegs: Wer sich zuerst festlegt, erkennt danach leichter, wo die eigene Vorstellung abweicht (Lernziel 2). Bevor Sie weiterlesen und ohne zu rechnen:\n\nSchätzen Sie die Koordinaten des Schwerpunkts \\(S\\) und notieren Sie \\(x_s\\) und \\(y_s\\) in mm.\nBegründen Sie Ihre Schätzung in einem Satz.\nLiegt \\(S\\) im Material oder außerhalb? Legen Sie sich fest.\n\n\n\n\n\n\n\n\n\nTippAuflösung (erst nach Ihrer Schätzung öffnen)\n\n\n\n\n\nZerlegung in zwei Teilflächen mit bekannten Schwerpunkten:\n\n\n\nTeilfläche\n\\(A_i\\) in mm²\n\\(x_{si}\\) in mm\n\\(y_{si}\\) in mm\n\n\n\n\n1 (stehend, 20 × 100)\n2000\n10\n50\n\n\n2 (liegend, 60 × 20)\n1200\n50\n10\n\n\n\n\\[\nx_s = \\frac{\\sum A_i\\,x_{si}}{\\sum A_i} = \\frac{2000\\cdot 10 + 1200\\cdot 50}{3200} = 25\\ \\text{mm},\n\\qquad\ny_s = \\frac{\\sum A_i\\,y_{si}}{\\sum A_i} = \\frac{2000\\cdot 50 + 1200\\cdot 10}{3200} = 35\\ \\text{mm}\n\\]\nVergleichen Sie mit Ihrer Schätzung:\n\nHaben Sie etwa \\((40 \\mid 50)\\) geschätzt? Das ist die Mitte des umschließenden Rechtecks. Sie wäre nur richtig, wenn die Fläche dieses Rechteck ganz ausfüllte. Hier fehlt die Ecke oben rechts, deshalb rückt \\(S\\) nach links unten.\n\\(S\\) liegt bei \\((25 \\mid 35)\\) und damit außerhalb des Materials, im freien Winkel der L-Fläche. Ein Schwerpunkt muss nicht im Körper liegen.\n\\(S\\) liegt auf der Strecke zwischen den beiden Teilschwerpunkten und näher an der größeren Teilfläche 1.\n\n\n\n\n\nROHENTWURF der KI: Der Text dieses Abschnitts ist ein Entwurf nach Ihrem Foliensatz. Prüfen Sie ihn fachlich, überarbeiten Sie ihn in Ihren Worten und löschen Sie danach diesen Kasten.\n\nViele Querschnitte lassen sich in Teilflächen zerlegen, deren Flächeninhalt \\(A_i\\) und Schwerpunkt \\((x_{si} \\mid y_{si})\\) bekannt sind (Abbildung 1.2). Das Integral über die Gesamtfläche wird dann zur Summe über die Teilflächen:\n\\[\nx_s = \\frac{\\sum x_{si}\\,A_i}{\\sum A_i}, \\qquad\ny_s = \\frac{\\sum y_{si}\\,A_i}{\\sum A_i}.\n\\]\n\n\n\n\n\n\nAbbildung 1.2: Zerlegung einer Fläche in drei Rechtecke mit bekannten Flächeninhalten \\(A_i\\) und Teilschwerpunkten \\(S_i\\). Erstellt mit Claude.\n\n\n\nJede Teilfläche geht mit ihrer Größe gewichtet ein, der Schwerpunkt liegt deshalb näher an den großen Teilflächen. Das Vorgehen gilt nicht nur für Rechtecke, sondern für alle Teilflächen mit bekanntem Schwerpunkt, etwa Dreiecke und Kreise; Werte für einfache Flächen stehen in Tabellen (Groß et al., 2024).\nIn der Rechnung hilft eine feste Reihenfolge: Koordinatensystem festlegen, Fläche zerlegen, für jede Teilfläche \\(A_i\\), \\(x_{si}\\) und \\(y_{si}\\) in eine Tabelle eintragen, Summen bilden und dividieren. Prüfen Sie das Ergebnis anschließend auf Plausibilität: Der Schwerpunkt liegt innerhalb des umschließenden Rechtecks, auf einer vorhandenen Symmetrieachse und bei zwei Teilflächen auf der Strecke zwischen den beiden Teilschwerpunkten. Im Material muss er nicht liegen.\n\nBeispiel: Hausfassade mit Tür und Fenstern\nGesucht ist der Flächenschwerpunkt der Fassade in Abbildung 1.3. Der Umriss besteht aus einem Rechteck (Wand) und einem Dreieck (Giebel). Tür und Fenster sind Aussparungen: Dort fehlt Fläche. Man behandelt sie wie jede andere Teilfläche, setzt ihren Flächeninhalt aber negativ an.\n\n\n\n\n\n\nAbbildung 1.3: Hausfassade aus Rechteck und Dreieck mit drei Aussparungen; der berechnete Schwerpunkt \\(S\\) ist eingetragen. Erstellt mit Claude.\n\n\n\nDer Schwerpunkt eines Dreiecks liegt auf einem Drittel der Höhe über der Grundseite, beim Giebel also bei \\(y_{s2} = 6 + 3/3 = 7\\ \\text{m}\\). Damit ergibt sich die Tabelle:\n\n\n\n\n\n\n\n\n\n\n\n\n\\(i\\)\nTeilfläche\n\\(A_i\\) in m²\n\\(x_{si}\\) in m\n\\(y_{si}\\) in m\n\\(x_{si}\\,A_i\\) in m³\n\\(y_{si}\\,A_i\\) in m³\n\n\n\n\n1\nWand, Rechteck 8 × 6\n48\n4\n3\n192\n144\n\n\n2\nGiebel, Dreieck mit Grundseite 8 und Höhe 3\n12\n4\n7\n48\n84\n\n\n3\nTür, 1 × 2\n−2\n1,5\n1\n−3\n−2\n\n\n4\nFenster unten, 2 × 1,5\n−3\n6\n1,75\n−18\n−5,25\n\n\n5\nFenster oben, 2 × 1,5\n−3\n6\n4,25\n−18\n−12,75\n\n\n\nSumme\n52\n\n\n201\n208\n\n\n\n\\[\nx_s = \\frac{\\sum x_{si}\\,A_i}{\\sum A_i} = \\frac{201}{52} \\approx 3{,}87\\ \\text{m},\n\\qquad\ny_s = \\frac{\\sum y_{si}\\,A_i}{\\sum A_i} = \\frac{208}{52} = 4{,}00\\ \\text{m}\n\\]\nPlausibilitätsprüfung: Ohne Aussparungen läge der Schwerpunkt wegen der Symmetrie bei \\(x_s = 4{,}00\\ \\text{m}\\) und bei \\(y_s = 228/60 = 3{,}80\\ \\text{m}\\). Die beiden Fenster nehmen rechts Fläche weg, deshalb rückt \\(S\\) um 0,13 m nach links. Die Aussparungen liegen überwiegend im unteren Teil, deshalb rückt \\(S\\) um 0,20 m nach oben. Der Schwerpunkt entfernt sich also von den Aussparungen.\nTypischer Fehler: Die Aussparungen werden im Zähler abgezogen, in der Flächensumme im Nenner aber vergessen. Das negative Vorzeichen gilt in beiden Summen.\n\n\n\n\n\n\nTippLernspiel: Wie wandert der Schwerpunkt?\n\n\n\nMit der Simulation üben Sie, die Lage des Schwerpunkts abzuschätzen, bevor Sie rechnen (Lernziel 2). Stellen Sie die Länge \\(b\\) der L-Fläche ein, tragen Sie Ihre Schätzung für \\(x_s\\) und \\(y_s\\) ein und wählen Sie erst dann „Schätzung prüfen“; wiederholen Sie das für mindestens drei Längen. Die Rückmeldung zeigt den berechneten Punkt mit Rechnung und erklärt, warum Ihre Schätzung abweicht.\n\n\n\n\n\n\n\n\n\n\nTippIhre Einschätzung prüfen\n\n\n\n„Der Schwerpunkt einer L-förmigen Fläche liegt in der Mitte des Rechtecks, das die Fläche umschließt.“ \nAuflösung: nein. Jede Teilfläche geht mit ihrer Größe gewichtet in die Rechnung ein, und die fehlende Ecke zieht den Schwerpunkt von der Rechteckmitte weg. Er kann dabei sogar außerhalb des Materials liegen.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Der Schwerpunkt</span>"
+    ]
+  },
+  {
+    "objectID": "lehreinheit.html#sec-abschnitt-3",
+    "href": "lehreinheit.html#sec-abschnitt-3",
+    "title": "Der Schwerpunkt",
+    "section": "Der Linienschwerpunkt",
+    "text": "Der Linienschwerpunkt\n\nROHENTWURF der KI: Der Text dieses Abschnitts ist ein Entwurf nach Ihrem Foliensatz. Prüfen Sie ihn fachlich, überarbeiten Sie ihn in Ihren Worten und löschen Sie danach diesen Kasten.\n\nBei dünnen Stäben, Drähten oder Seilen ist das Gewicht entlang einer Linie verteilt. Bei konstantem Querschnitt mit Dicke \\(t\\) und Breite \\(b\\) gilt \\(\\mathrm{d}V = t\\,b\\,\\mathrm{d}s\\); Dicke und Breite kürzen sich, und es bleibt der Linienschwerpunkt\n\\[\nx_s = \\frac{\\int x\\,\\mathrm{d}s}{\\int \\mathrm{d}s}, \\qquad\ny_s = \\frac{\\int y\\,\\mathrm{d}s}{\\int \\mathrm{d}s}.\n\\]\nFür Linien aus \\(n\\) Teillinien mit den Längen \\(l_i\\) und bekannten Teilschwerpunkten gilt entsprechend\n\\[\nx_s = \\frac{\\sum x_{si}\\,l_i}{\\sum l_i}, \\qquad\ny_s = \\frac{\\sum y_{si}\\,l_i}{\\sum l_i}.\n\\]\nGewichtet wird also mit Längen und nicht mit Flächen. Deshalb hat derselbe Umriss als Draht einen anderen Schwerpunkt als als Blech (Abbildung 1.4): Beim Halbkreisbogen mit Radius \\(r\\) liegt der Schwerpunkt im Abstand \\(2r/\\pi \\approx 0{,}64\\,r\\) vom Kreismittelpunkt, bei der Halbkreisfläche im Abstand \\(4r/(3\\pi) \\approx 0{,}42\\,r\\) (Groß et al., 2024). In beiden Fällen liegt er auf der Symmetrieachse, beim Draht jedoch an einer Stelle, an der sich kein Material befindet.\n\n\n\n\n\n\nAbbildung 1.4: Gleicher Umriss, verschiedene Schwerpunkte: Halbkreisbogen aus Draht und Halbkreisfläche aus Blech. Erstellt mit Claude.\n\n\n\n\n\n\n\n\n\nTippIhre Einschätzung prüfen\n\n\n\n„Ein Halbkreisbogen aus Draht und eine Halbkreisfläche aus Blech mit gleichem Radius haben denselben Schwerpunkt.“ \nAuflösung: nein. Beim Draht liegt das gesamte Gewicht auf dem Bogen, beim Blech auch im Inneren nahe dem Durchmesser. Der Schwerpunkt des Drahtes liegt deshalb weiter vom Kreismittelpunkt entfernt als der des Blechs.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Der Schwerpunkt</span>"
+    ]
+  },
+  {
+    "objectID": "lehreinheit.html#sec-lerncheck",
+    "href": "lehreinheit.html#sec-lerncheck",
+    "title": "Der Schwerpunkt",
+    "section": "Lern-Check",
+    "text": "Lern-Check\n\n\n\n\n\n\nTippLern-Check: Was ist hängen geblieben?\n\n\n\nDer Lern-Check prüft jedes der drei Lernziele mit einer Frage; er wird nicht benotet. Wählen Sie pro Frage eine Antwort, ohne zurückzublättern. Die Rückmeldung erklärt danach jede Option, auch die falschen.\n\n\n\n\n\n\n\n\n\n\nTippKernaussagen\n\n\n\n\nBeim homogenen Körper fällt der Schwerpunkt mit dem Volumenmittelpunkt zusammen. Bei einer Scheibe mit konstanter Dicke genügt deshalb der Flächenschwerpunkt.\nFür zusammengesetzte Flächen gilt \\(x_s = \\sum A_i\\,x_{si} / \\sum A_i\\) und entsprechend für \\(y_s\\). Aussparungen gehen als negative Flächen ein. Der Schwerpunkt liegt näher an der größeren Teilfläche und kann außerhalb des Materials liegen.\nBeim Linienschwerpunkt gewichtet man mit Längen statt mit Flächen. Derselbe Umriss hat deshalb als Draht einen anderen Schwerpunkt als als Blech.\n\n\n\n\n\n\n\n\n\nHinweisLernfragen\n\n\n\nWiederholen\n\nWas bedeutet „homogener Körper“, und was folgt daraus für die Lage des Schwerpunkts?\nWie lauten die Formeln für die Schwerpunktkoordinaten einer Fläche aus \\(n\\) bekannten Teilflächen?\n\nAnwenden\n\nEine L-Fläche besteht aus einem stehenden Rechteck (20 mm × 100 mm) und einem rechts unten angesetzten liegenden Rechteck (140 mm × 20 mm). Berechnen Sie \\(x_s\\) und \\(y_s\\) bezogen auf die linke untere Ecke und prüfen Sie Ihr Ergebnis mit der Simulation im zweiten Abschnitt.\nEin Draht ist zu einem rechten Winkel mit den Schenkellängen 60 mm und 100 mm gebogen. Berechnen Sie die Koordinaten des Linienschwerpunkts bezogen auf die Ecke.\n\nBeurteilen\n\nEine Kommilitonin sagt: „Bei einem symmetrischen Bauteil muss ich den Schwerpunkt gar nicht berechnen.“ Inwieweit stimmt das, und was bleibt bei nur einer Symmetrieachse zu rechnen?\nZurück zur Szene: Der Schwerpunkt des L-förmigen Zuschnitts liegt außerhalb des Blechs. Beurteilen Sie, ob ein einzelner Anschlagpunkt auf dem Blech genügt, damit es waagerecht hängt, und begründen Sie Ihre Antwort.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Der Schwerpunkt</span>"
+    ]
+  },
+  {
+    "objectID": "lehreinheit.html#quellen",
+    "href": "lehreinheit.html#quellen",
+    "title": "Der Schwerpunkt",
+    "section": "Quellen",
+    "text": "Quellen\n\n\nGroß, D., Hauger, W., Schröder, J., & Wall, W. A. (2024).\nTechnische mechanik 1: statik. Springer Vieweg. https://doi.org/10.1007/978-3-662-69443-5.",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Der Schwerpunkt</span>"
+    ]
+  },
+  {
+    "objectID": "literatur.html",
+    "href": "literatur.html",
+    "title": "Literatur",
+    "section": "",
+    "text": "Alle zitierten Quellen des Skripts, automatisch aus references.bib erzeugt.",
+    "crumbs": [
+      "Literatur"
+    ]
+  }
+]

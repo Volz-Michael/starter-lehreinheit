@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lern-Check</title>
+<!--
+  BEISPIEL-SPIEL der Vorlage: Lern-Check am Ende der Einheit, Multiple Choice mit erklärender
+  Rückmeldung zu jeder Antwortoption. Ersetzen Sie die Datei oder nur den DATEN-Block.
+-->
+<style>
+  :root { --akzent: #1f5f8b; --ok: #2e7d32; --nok: #b3261e; --rand: #d0d7de; }
+  * { box-sizing: border-box; }
+  body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif; margin: 0; padding: 12px; color: #1b1f24; line-height: 1.45; }
+  h1 { font-size: 1.1rem; margin: 0 0 4px; }
+  .hinweis { font-size: 0.9rem; color: #57606a; margin: 0 0 10px; }
+  .frage { border: 1px solid var(--rand); border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+  .frage > p { margin: 0 0 8px; font-weight: 600; }
+  .opt { display: block; width: 100%; text-align: left; font: inherit; font-size: 0.92rem; margin: 4px 0; padding: 7px 10px;
+         border: 1px solid var(--rand); border-radius: 6px; background: #fff; cursor: pointer; }
+  .opt:focus-visible { outline: 3px solid #e0a400; outline-offset: 2px; }
+  .opt.ok { border: 2px solid var(--ok); background: #e8f5e9; }
+  .opt.nok { border: 2px solid var(--nok); background: #fdecea; }
+  .fb { font-size: 0.9rem; margin-top: 6px; }
+  #summe { font-weight: 600; }
+</style>
+</head>
+<body>
+<h1 id="titel"></h1>
+<p class="hinweis" id="hinweis"></p>
+<div id="fragen"></div>
+<p id="summe" aria-live="polite"></p>
+
+<script>
+/* ===== DATEN: Nur diesen Block ändern ===================================== */
+const DATEN = {
+  titel: "Lern-Check: Was ist hängen geblieben?",
+  hinweis: "Eine Antwort pro Frage. Die Rückmeldung erklärt jede Option, auch die falschen.",
+  fragen: [
+    { frage: "Unter welcher Voraussetzung fällt der Schwerpunkt eines Körpers mit seinem Volumenmittelpunkt zusammen?",
+      optionen: [
+        { text: "Wenn der Körper mindestens eine Symmetrieachse hat", richtig: false, warum: "Die Symmetrie der Form legt nur den Volumenmittelpunkt auf die Achse; bei ungleichmäßig verteiltem Gewicht kann der Schwerpunkt trotzdem woanders liegen." },
+        { text: "Wenn der Körper homogen ist, das spezifische Gewicht also überall gleich ist", richtig: true, warum: "Dann kürzt sich das spezifische Gewicht aus der Formel heraus, und nur die Form bestimmt die Lage." },
+        { text: "Immer, denn der Schwerpunkt ist stets der geometrische Mittelpunkt", richtig: false, warum: "Bei ungleichmäßig verteiltem Gewicht verschiebt sich der Schwerpunkt zur schwereren Seite." } ] },
+    { frage: "Eine 80 mm breite Fläche besteht aus zwei Rechtecken: A1 = 2000 mm² mit x_s1 = 10 mm und A2 = 1200 mm² mit x_s2 = 50 mm. Wie groß ist x_s?",
+      optionen: [
+        { text: "25 mm", richtig: true, warum: "(2000 · 10 + 1200 · 50) / 3200 = 25 mm: Jede Teilfläche geht mit ihrer Größe gewichtet ein." },
+        { text: "30 mm", richtig: false, warum: "Das ist der Mittelwert von x_s1 und x_s2 ohne Gewichtung; er gälte nur bei gleich großen Teilflächen." },
+        { text: "40 mm", richtig: false, warum: "Das ist die Mitte des umschließenden Rechtecks; sie gälte nur, wenn die Fläche dieses Rechteck ganz ausfüllte." } ] },
+    { frage: "Ein Draht und ein Blech haben beide die Form eines Halbkreises mit Radius r. Welcher Schwerpunkt liegt weiter vom Kreismittelpunkt entfernt?",
+      optionen: [
+        { text: "Beide liegen gleich weit entfernt", richtig: false, warum: "Beim Draht wird mit Längen gewichtet, beim Blech mit Flächen; das ergibt verschiedene Punkte." },
+        { text: "Der des Blechs (Halbkreisfläche)", richtig: false, warum: "Beim Blech liegt viel Fläche nahe am Durchmesser; sein Schwerpunkt liegt bei 4r/(3π) ≈ 0,42 r." },
+        { text: "Der des Drahtes (Halbkreisbogen)", richtig: true, warum: "Beim Draht liegt die gesamte Länge außen auf dem Bogen; sein Schwerpunkt liegt bei 2r/π ≈ 0,64 r." } ] },
+  ]
+};
+/* ===== ENDE DATEN ========================================================== */
+
+(function () {
+  document.getElementById("titel").textContent = DATEN.titel;
+  document.getElementById("hinweis").textContent = DATEN.hinweis;
+  const box = document.getElementById("fragen");
+  let beantwortet = 0, punkte = 0;
+
+  DATEN.fragen.forEach((f, i) => {
+    const d = document.createElement("div"); d.className = "frage";
+    const p = document.createElement("p"); p.textContent = (i + 1) + ". " + f.frage; d.appendChild(p);
+    const fb = document.createElement("div"); fb.className = "fb"; fb.setAttribute("aria-live", "polite");
+    const knoepfe = f.optionen.map((o) => {
+      const b = document.createElement("button"); b.type = "button"; b.className = "opt"; b.textContent = o.text;
+      b.addEventListener("click", () => {
+        if (d.dataset.fertig) return;
+        d.dataset.fertig = "1"; beantwortet++; if (o.richtig) punkte++;
+        knoepfe.forEach((k, j) => { if (f.optionen[j].richtig) k.classList.add("ok"); });
+        if (!o.richtig) b.classList.add("nok");
+        fb.innerHTML = "";
+        f.optionen.forEach((x) => {
+          const z = document.createElement("div");
+          z.textContent = (x.richtig ? "✓ " : "✗ ") + x.text + ": " + x.warum; fb.appendChild(z);
+        });
+        if (beantwortet === DATEN.fragen.length)
+          document.getElementById("summe").textContent = "Ergebnis: " + punkte + " von " + DATEN.fragen.length + " richtig.";
+        meldeHoehe();
+      });
+      d.appendChild(b); return b;
+    });
+    d.appendChild(fb); box.appendChild(d);
+  });
+
+  function meldeHoehe() {
+    try { window.parent.postMessage({ typ: "iframe-hoehe", hoehe: document.documentElement.scrollHeight }, "*"); } catch (e) {}
+  }
+  window.addEventListener("load", meldeHoehe);
+  window.addEventListener("resize", meldeHoehe);
+})();
+</script>
+</body>
+</html>
