@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Simulation Schwerpunkt</title>
+<style>
+  :root {
+    color-scheme: light;
+    --grund: #f4f6f8;
+    --flaeche: #ffffff;
+    --text: #17232e;
+    --leise: #55636f;
+    --linie: #c5ced6;
+    --koerper: #cfdbe6;
+    --akzent: #b4440f;
+    --richtig: #1b6e45;
+    --schaetzung: #6a2c91;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background: var(--grund);
+    color: var(--text);
+    font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.45;
+    overflow-x: hidden;
+  }
+  main {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 16px 12px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  h1 { font-size: 1.4rem; line-height: 1.2; margin: 0; }
+  h2 { font-size: 1.05rem; margin: 0; }
+  p { margin: 0; }
+  .leise { color: var(--leise); }
+  .kasten {
+    background: var(--flaeche);
+    border: 1px solid var(--linie);
+    border-radius: 6px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  svg { display: block; width: 100%; height: auto; }
+  .legende { font-size: 0.875rem; color: var(--leise); }
+  label { font-weight: 600; display: block; }
+  input[type="range"] { width: 100%; min-height: 32px; accent-color: var(--akzent); }
+  .eingaben { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  input[type="text"] {
+    font: inherit;
+    width: 100%;
+    min-height: 44px;
+    padding: 8px 10px;
+    border: 2px solid var(--linie);
+    border-radius: 6px;
+    background: var(--flaeche);
+    color: var(--text);
+  }
+  button {
+    font: inherit;
+    font-weight: 600;
+    min-height: 44px;
+    padding: 10px 16px;
+    border-radius: 6px;
+    border: 2px solid var(--text);
+    background: var(--text);
+    color: #ffffff;
+    cursor: pointer;
+    align-self: flex-start;
+  }
+  button:disabled { background: var(--flaeche); color: var(--leise); border-color: var(--linie); cursor: default; }
+  button:focus-visible, input:focus-visible { outline: 3px solid var(--akzent); outline-offset: 2px; }
+  .satz { font-weight: 600; }
+  .rechnung { font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+  ol { margin: 0; padding-left: 1.4em; display: flex; flex-direction: column; gap: 4px; font-variant-numeric: tabular-nums; }
+  [hidden] { display: none !important; }
+
+  .achse { stroke: var(--leise); stroke-width: 0.6; }
+  .koerper { fill: var(--koerper); stroke: var(--text); stroke-width: 0.9; }
+  .teilung { stroke: var(--text); stroke-width: 0.5; stroke-dasharray: 2 2; }
+  .huelle { fill: none; stroke: var(--leise); stroke-width: 0.5; stroke-dasharray: 3 2; }
+  .verbindung { stroke: var(--text); stroke-width: 0.5; }
+  .teilpunkt { fill: var(--text); }
+  .mitte { fill: var(--flaeche); stroke: var(--leise); stroke-width: 0.8; }
+  .sp-ring { fill: var(--flaeche); stroke: var(--richtig); stroke-width: 0.9; }
+  .sp-viertel { fill: var(--richtig); }
+  .kreuz { stroke: var(--schaetzung); stroke-width: 1.3; stroke-linecap: round; }
+  .beschriftung { font-size: 8px; fill: var(--text); font-family: inherit; }
+  .beschriftung.leise { fill: var(--leise); }
+</style>
+</head>
+<body>
+<main>
+  <h1 id="titel"></h1>
+  <p class="leise" id="anleitung"></p>
+
+  <div class="kasten">
+    <div id="zeichnung"></div>
+    <p class="legende" id="legende"></p>
+  </div>
+
+  <form class="kasten" id="formular" novalidate>
+    <div>
+      <label for="laenge" id="laengeText"></label>
+      <input type="range" id="laenge">
+    </div>
+    <div class="eingaben">
+      <div>
+        <label for="schaetzX" id="labelX"></label>
+        <input type="text" id="schaetzX" inputmode="decimal" autocomplete="off">
+      </div>
+      <div>
+        <label for="schaetzY" id="labelY"></label>
+        <input type="text" id="schaetzY" inputmode="decimal" autocomplete="off">
+      </div>
+    </div>
+    <button type="submit" id="pruefen">Schätzung prüfen</button>
+  </form>
+
+  <div class="kasten" id="meldung" aria-live="polite">
+    <p class="satz" id="satz"></p>
+    <p id="lage" hidden></p>
+    <p class="rechnung" id="rechnung" hidden></p>
+  </div>
+
+  <section class="kasten" id="protokollBereich" hidden>
+    <h2>Ihre bisherigen Schätzungen</h2>
+    <ol id="protokoll"></ol>
+  </section>
+</main>
+
+<script>
+/* ===== DATEN: Nur diesen Block ändern ===== */
+const DATEN = {
+  titel: "Simulation: Schwerpunkt einer L-Fläche",
+  anleitung: "Stellen Sie die Länge b ein, schätzen Sie die Koordinaten des Schwerpunkts und prüfen Sie erst danach. Der Ursprung liegt in der linken unteren Ecke.",
+  einheit: "mm",
+  /* Teilfläche 1: stehendes Rechteck am Ursprung */
+  steg: { breite: 20, hoehe: 100 },
+  /* Teilfläche 2: liegendes Rechteck, rechts unten angesetzt; seine Länge b ist einstellbar */
+  schenkel: { hoehe: 20, laengeMin: 20, laengeMax: 160, laengeStart: 100, schritt: 10 },
+  /* Eine Schätzung gilt als getroffen, wenn sie höchstens so weit vom Schwerpunkt entfernt ist */
+  toleranz: 4,
+  legende: "Punkte: Teilschwerpunkte S1 und S2 · Kreis mit Vierteln: berechneter Schwerpunkt S · Kreuz: Ihre Schätzung · Quadrat: Mitte des umschließenden Rechtecks"
+};
+/* ===== ENDE DATEN ===== */
+
+(function () {
+  "use strict";
+
+  var el = function (id) { return document.getElementById(id); };
+  var E = DATEN.einheit;
+  var a = DATEN.steg.breite, H = DATEN.steg.hoehe, t = DATEN.schenkel.hoehe;
+  var b = DATEN.schenkel.laengeStart;
+  var geprueft = null;   // { sx, sy } nach dem Prüfen, sonst null
+
+  function meldeHoehe() {
+    try {
+      window.parent.postMessage(
+        { typ: "iframe-hoehe", hoehe: document.documentElement.scrollHeight },
+        "*"
+      );
+    } catch (e) { /* ohne einbettende Seite nichts zu melden */ }
+  }
+
+  function zahl(n) {
+    return n.toLocaleString("de-DE", { maximumFractionDigits: 1 });
+  }
+
+  function lies(text) {
+    var s = String(text).trim().replace(",", ".");
+    if (s === "" || !/^\d+(\.\d+)?$/.test(s)) { return NaN; }
+    return parseFloat(s);
+  }
+
+  function rechne() {
+    var A1 = a * H, x1 = a / 2, y1 = H / 2;
+    var A2 = b * t, x2 = a + b / 2, y2 = t / 2;
+    var A = A1 + A2;
+    return {
+      A1: A1, x1: x1, y1: y1, A2: A2, x2: x2, y2: y2, A: A,
+      xs: (A1 * x1 + A2 * x2) / A,
+      ys: (A1 * y1 + A2 * y2) / A,
+      mx: (a + b) / 2, my: H / 2
+    };
+  }
+
+  function imMaterial(x, y) {
+    return (x >= 0 && x <= a && y >= 0 && y <= H) || (x >= 0 && x <= a + b && y >= 0 && y <= t);
+  }
+
+  function zeichne() {
+    var r = rechne();
+    var W = a + DATEN.schenkel.laengeMax;
+    var s = [];
+    s.push('<svg viewBox="-18 ' + (-(H + 14)) + ' ' + (W + 36) + ' ' + (H + 32) +
+      '" role="img" aria-label="L-Fläche aus zwei Rechtecken, Länge b gleich ' + zahl(b) + ' ' + E + '">');
+    s.push('<line class="achse" x1="0" y1="0" x2="' + (W + 10) + '" y2="0"/>');
+    s.push('<line class="achse" x1="0" y1="0" x2="0" y2="' + (-(H + 10)) + '"/>');
+    s.push('<text class="beschriftung leise" x="' + (W + 12) + '" y="2.5">x</text>');
+    s.push('<text class="beschriftung leise" x="-2.5" y="' + (-(H + 11)) + '" text-anchor="middle">y</text>');
+    if (geprueft) {
+      s.push('<rect class="huelle" x="0" y="' + (-H) + '" width="' + (a + b) + '" height="' + H + '"/>');
+    }
+    s.push('<polygon class="koerper" points="0,0 ' + (a + b) + ',0 ' + (a + b) + ',' + (-t) + ' ' +
+      a + ',' + (-t) + ' ' + a + ',' + (-H) + ' 0,' + (-H) + '"/>');
+    s.push('<line class="teilung" x1="' + a + '" y1="0" x2="' + a + '" y2="' + (-t) + '"/>');
+    s.push('<text class="beschriftung" x="' + (a / 2) + '" y="' + (-(H * 0.8)) + '" text-anchor="middle">1</text>');
+    s.push('<text class="beschriftung" x="' + (a + b - 6) + '" y="' + (-(t / 2) + 2.5) + '" text-anchor="middle">2</text>');
+    s.push('<text class="beschriftung leise" x="' + (a + b / 2) + '" y="10" text-anchor="middle">b = ' +
+      zahl(b) + ' ' + E + '</text>');
+    s.push('<text class="beschriftung leise" x="-3" y="' + (-(H / 2)) + '" text-anchor="end">' + zahl(H) + '</text>');
+    s.push('<text class="beschriftung leise" x="' + (a / 2) + '" y="10" text-anchor="middle">' + zahl(a) + '</text>');
+
+    if (geprueft) {
+      s.push('<line class="verbindung" x1="' + r.x1 + '" y1="' + (-r.y1) + '" x2="' + r.x2 + '" y2="' + (-r.y2) + '"/>');
+      s.push('<circle class="teilpunkt" cx="' + r.x1 + '" cy="' + (-r.y1) + '" r="1.6"/>');
+      s.push('<circle class="teilpunkt" cx="' + r.x2 + '" cy="' + (-r.y2) + '" r="1.6"/>');
+      s.push('<rect class="mitte" x="' + (r.mx - 2.2) + '" y="' + (-r.my - 2.2) + '" width="4.4" height="4.4"/>');
+      var cx = r.xs, cy = -r.ys, R = 3.6;
+      s.push('<circle class="sp-ring" cx="' + cx + '" cy="' + cy + '" r="' + R + '"/>');
+      s.push('<path class="sp-viertel" d="M' + cx + ' ' + cy + ' L' + cx + ' ' + (cy - R) +
+        ' A' + R + ' ' + R + ' 0 0 1 ' + (cx + R) + ' ' + cy + ' Z"/>');
+      s.push('<path class="sp-viertel" d="M' + cx + ' ' + cy + ' L' + cx + ' ' + (cy + R) +
+        ' A' + R + ' ' + R + ' 0 0 1 ' + (cx - R) + ' ' + cy + ' Z"/>');
+      var kx = geprueft.sx, ky = -geprueft.sy, k = 3;
+      s.push('<line class="kreuz" x1="' + (kx - k) + '" y1="' + (ky - k) + '" x2="' + (kx + k) + '" y2="' + (ky + k) + '"/>');
+      s.push('<line class="kreuz" x1="' + (kx - k) + '" y1="' + (ky + k) + '" x2="' + (kx + k) + '" y2="' + (ky - k) + '"/>');
+    }
+    s.push('</svg>');
+    el("zeichnung").innerHTML = s.join("");
+  }
+
+  function zeigeMeldung(satz, lage, rechnung) {
+    el("satz").textContent = satz;
+    el("lage").textContent = lage || "";
+    el("lage").hidden = !lage;
+    el("rechnung").textContent = rechnung || "";
+    el("rechnung").hidden = !rechnung;
+  }
+
+  function beschrifte() {
+    el("laengeText").textContent = "Länge b des liegenden Rechtecks: " + zahl(b) + " " + E;
+    el("labelX").textContent = "Ihr x_s in " + E;
+    el("labelY").textContent = "Ihr y_s in " + E;
+  }
+
+  function neueLaenge() {
+    b = Number(el("laenge").value);
+    geprueft = null;
+    el("schaetzX").value = "";
+    el("schaetzY").value = "";
+    el("pruefen").disabled = false;
+    beschrifte();
+    zeichne();
+    zeigeMeldung("Neue Länge b = " + zahl(b) + " " + E +
+      ". Schätzen Sie zuerst beide Koordinaten und prüfen Sie dann.", "", "");
+    meldeHoehe();
+  }
+
+  function pruefe(ereignis) {
+    ereignis.preventDefault();
+    if (geprueft) { return; }
+    var sx = lies(el("schaetzX").value);
+    var sy = lies(el("schaetzY").value);
+    if (isNaN(sx) || sx > a + b) {
+      zeigeMeldung("Bitte geben Sie für x_s eine Zahl zwischen 0 und " + zahl(a + b) +
+        " ein, denn weiter reicht die Fläche in x-Richtung nicht.", "", "");
+      el("schaetzX").focus();
+      meldeHoehe();
+      return;
+    }
+    if (isNaN(sy) || sy > H) {
+      zeigeMeldung("Bitte geben Sie für y_s eine Zahl zwischen 0 und " + zahl(H) +
+        " ein, denn höher reicht die Fläche in y-Richtung nicht.", "", "");
+      el("schaetzY").focus();
+      meldeHoehe();
+      return;
+    }
+
+    var r = rechne();
+    var abstand = Math.hypot(sx - r.xs, sy - r.ys);
+    var abstandMitte = Math.hypot(sx - r.mx, sy - r.my);
+    var abw = "Abweichung " + zahl(abstand) + " " + E;
+    var satz;
+    if (abstand <= DATEN.toleranz) {
+      satz = "Gut geschätzt (" + abw + "): Der Schwerpunkt teilt die Strecke zwischen den Teilschwerpunkten " +
+        "im umgekehrten Verhältnis der Flächen, hier A1 : A2 = " + zahl(r.A1) + " : " + zahl(r.A2) + ".";
+    } else if (abstandMitte <= DATEN.toleranz * 1.5) {
+      satz = "Nicht getroffen (" + abw + "): Ihre Schätzung liegt bei der Mitte des umschließenden Rechtecks; " +
+        "das gälte nur für ein volles Rechteck, hier fehlt aber die Ecke oben rechts, " +
+        "deshalb rückt der Schwerpunkt nach links unten.";
+    } else if (r.A1 === r.A2) {
+      satz = "Nicht getroffen (" + abw + "): Beide Teilflächen sind gleich groß (" + zahl(r.A1) + " " + E +
+        "²), deshalb liegt der Schwerpunkt genau in der Mitte der Strecke zwischen S1 und S2.";
+    } else {
+      var groesser = r.A1 > r.A2 ? "1" : "2";
+      satz = "Nicht getroffen (" + abw + "): Der Schwerpunkt liegt auf der Strecke zwischen S1 und S2 " +
+        "und näher an der größeren Teilfläche; hier ist das Teilfläche " + groesser + " (A1 = " +
+        zahl(r.A1) + " " + E + "², A2 = " + zahl(r.A2) + " " + E + "²).";
+    }
+    var lage = "Berechnet: S (" + zahl(r.xs) + " | " + zahl(r.ys) + ") " + E + ". " +
+      (imMaterial(r.xs, r.ys)
+        ? "Der Punkt liegt im Material."
+        : "Der Punkt liegt außerhalb des Materials, im freien Winkel der L-Fläche.");
+    var rechnung = "x_s = (A1·x1 + A2·x2) / (A1 + A2) = (" + zahl(r.A1) + "·" + zahl(r.x1) + " + " +
+      zahl(r.A2) + "·" + zahl(r.x2) + ") / " + zahl(r.A) + " = " + zahl(r.xs) + " " + E +
+      ";  y_s = (" + zahl(r.A1) + "·" + zahl(r.y1) + " + " + zahl(r.A2) + "·" + zahl(r.y2) + ") / " +
+      zahl(r.A) + " = " + zahl(r.ys) + " " + E;
+
+    geprueft = { sx: sx, sy: sy };
+    el("pruefen").disabled = true;
+    zeichne();
+    zeigeMeldung(satz, lage, rechnung);
+
+    var li = document.createElement("li");
+    li.textContent = "b = " + zahl(b) + " " + E + ": geschätzt (" + zahl(sx) + " | " + zahl(sy) +
+      "), berechnet (" + zahl(r.xs) + " | " + zahl(r.ys) + "), " + abw;
+    el("protokoll").appendChild(li);
+    el("protokollBereich").hidden = false;
+    meldeHoehe();
+  }
+
+  el("titel").textContent = DATEN.titel;
+  document.title = DATEN.titel;
+  el("anleitung").textContent = DATEN.anleitung;
+  el("legende").textContent = DATEN.legende;
+  var regler = el("laenge");
+  regler.min = DATEN.schenkel.laengeMin;
+  regler.max = DATEN.schenkel.laengeMax;
+  regler.step = DATEN.schenkel.schritt;
+  regler.value = b;
+  regler.addEventListener("input", neueLaenge);
+  el("formular").addEventListener("submit", pruefe);
+  window.addEventListener("load", meldeHoehe);
+  window.addEventListener("resize", meldeHoehe);
+
+  beschrifte();
+  zeichne();
+  zeigeMeldung("Schätzen Sie die Koordinaten des Schwerpunkts für b = " + zahl(b) + " " + E +
+    " und wählen Sie dann „Schätzung prüfen“.", "", "");
+  meldeHoehe();
+})();
+</script>
+</body>
+</html>

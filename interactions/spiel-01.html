@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Memory Schwerpunkt</title>
+<style>
+  :root {
+    color-scheme: light;
+    --grund: #f4f6f8;
+    --flaeche: #ffffff;
+    --text: #17232e;
+    --leise: #55636f;
+    --linie: #c5ced6;
+    --verdeckt: #2f4558;
+    --akzent: #b4440f;
+    --richtig: #1b6e45;
+    --richtig-grund: #e3f3ea;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background: var(--grund);
+    color: var(--text);
+    font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.45;
+    overflow-x: hidden;
+  }
+  main {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 16px 12px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  h1 { font-size: 1.5rem; line-height: 1.2; margin: 0; }
+  h2 { font-size: 1.1rem; margin: 0; }
+  p { margin: 0; }
+  .anleitung { color: var(--leise); }
+  .leiste {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .zaehler { font-variant-numeric: tabular-nums; font-weight: 600; }
+  button { font: inherit; color: inherit; cursor: pointer; }
+  button:focus-visible { outline: 3px solid var(--akzent); outline-offset: 2px; }
+  .neu {
+    background: var(--flaeche);
+    border: 2px solid var(--text);
+    border-radius: 6px;
+    padding: 10px 16px;
+    font-weight: 600;
+    min-height: 44px;
+  }
+  .meldung {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: var(--flaeche);
+    border: 1px solid var(--linie);
+    border-radius: 6px;
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .meldung .satz { font-weight: 600; }
+  .meldung .zusatz { color: var(--leise); font-size: 0.94rem; }
+  .meldung .ergebnis { font-weight: 600; color: var(--richtig); }
+  .feld {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 8px;
+  }
+  .karte {
+    min-height: 112px;
+    width: 100%;
+    padding: 8px;
+    border-radius: 6px;
+    border: 2px solid var(--verdeckt);
+    background: var(--verdeckt);
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 4px;
+    text-align: left;
+    overflow-wrap: anywhere;
+    hyphens: auto;
+  }
+  .karte.zu { align-items: center; font-size: 1.5rem; font-weight: 600; }
+  .karte.offen { background: var(--flaeche); color: var(--text); border-color: var(--akzent); }
+  .karte.gefunden {
+    background: var(--richtig-grund);
+    color: var(--text);
+    border-color: var(--richtig);
+    cursor: default;
+  }
+  .karte .art {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--leise);
+  }
+  .karte.gefunden .art { color: var(--richtig); }
+  .karte .inhalt { font-size: 0.875rem; line-height: 1.3; }
+  .karte.begriff .inhalt { font-size: 1rem; font-weight: 600; }
+  .paare { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+  .paare li {
+    background: var(--flaeche);
+    border: 1px solid var(--linie);
+    border-radius: 6px;
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .paare .name { font-weight: 600; }
+  .paare .neben { color: var(--leise); font-size: 0.9rem; }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<main>
+  <h1 id="titel"></h1>
+  <p class="anleitung" id="anleitung"></p>
+
+  <div class="leiste">
+    <p class="zaehler" id="zaehler"></p>
+    <button type="button" class="neu" id="neu">Neu mischen</button>
+  </div>
+
+  <div class="meldung" id="meldung" aria-live="polite">
+    <p class="satz" id="satz"></p>
+    <p class="zusatz" id="zusatz" hidden></p>
+    <p class="ergebnis" id="ergebnis" hidden></p>
+  </div>
+
+  <div class="feld" id="feld"></div>
+
+  <section id="gefundenBereich" hidden>
+    <h2>Gefundene Paare</h2>
+    <ul class="paare" id="paare"></ul>
+  </section>
+</main>
+
+<script>
+/* ===== DATEN: Nur diesen Block ändern ===== */
+const DATEN = {
+  titel: "Memory: Grundbegriffe zum Schwerpunkt",
+  anleitung: "Decken Sie je zwei Karten auf und finden Sie zu jedem Begriff die passende Definition.",
+  paare: [
+    {
+      begriff: "Schwerpunkt",
+      definition: "Punkt, in dem man sich die gesamte Schwerkraft eines Gegenstands vereint denken darf.",
+      verwechslung: "Wird mit dem geometrischen Mittelpunkt gleichgesetzt; das gilt nur bei konstanter Dichte.",
+      fundstelle: "Kap. 4, Folien 1–4"
+    },
+    {
+      begriff: "Homogener Körper",
+      definition: "Gegenstand, dessen Dichte an jeder Stelle gleich groß ist.",
+      verwechslung: "„Isotrop“ (gleiche Eigenschaften in allen Richtungen).",
+      fundstelle: "Abschn. 4.1, Folie 1"
+    },
+    {
+      begriff: "Spezifisches Gewicht",
+      definition: "Schwerkraft je Volumeneinheit; Produkt aus Dichte und Erdbeschleunigung.",
+      verwechslung: "Dichte (Masse je Volumeneinheit, ohne Erdbeschleunigung).",
+      fundstelle: "Abschn. 4.1, Folie 1"
+    },
+    {
+      begriff: "Wirkungslinie",
+      definition: "Gerade, entlang der eine Kraft verschoben werden darf, ohne ihre Wirkung zu ändern.",
+      verwechslung: "Angriffspunkt der Kraft.",
+      fundstelle: "Abschn. 4.1, Folie 1"
+    },
+    {
+      begriff: "Statisch äquivalent",
+      definition: "Zwei Kraftsysteme mit gleicher resultierender Kraft und gleichem resultierendem Moment.",
+      verwechslung: "Gleichgewicht (dort sind Resultierende und Moment null).",
+      fundstelle: "Abschn. 4.1, Folie 1; Anwendung Folie 3"
+    },
+    {
+      begriff: "Flächenschwerpunkt",
+      definition: "Geometrischer Mittelpunkt einer ebenen Figur, maßgebend für Scheiben mit konstanter Dicke.",
+      verwechslung: "Mitte des umschließenden Rechtecks.",
+      fundstelle: "Abschn. 4.1, Folie 6"
+    },
+    {
+      begriff: "Teilfläche",
+      definition: "Einfacher Baustein, in den eine zusammengesetzte Figur zur Berechnung zerlegt wird.",
+      verwechslung: "Aussparungen werden vergessen, statt sie negativ anzusetzen.",
+      fundstelle: "Abschn. 4.1, Folie 9"
+    },
+    {
+      begriff: "Linienschwerpunkt",
+      definition: "Mittlere Lage eines dünnen, gebogenen oder geknickten Drahtes, gewichtet nach Länge.",
+      verwechslung: "Mittelpunkt der vom Draht umschlossenen Figur.",
+      fundstelle: "Abschn. 4.2, Folie 11"
+    }
+  ]
+};
+/* ===== ENDE DATEN ===== */
+
+(function () {
+  "use strict";
+
+  var el = function (id) { return document.getElementById(id); };
+  var karten = [];      // { paar, art, text, status: "zu" | "offen" | "gefunden" }
+  var knoepfe = [];
+  var offen = [];       // Indizes der aktuell gewählten Karten (höchstens zwei)
+  var zuDecken = [];    // aufgedeckte Karten eines Fehlversuchs
+  var versuche = 0;
+  var gefunden = 0;
+
+  function meldeHoehe() {
+    try {
+      window.parent.postMessage(
+        { typ: "iframe-hoehe", hoehe: document.documentElement.scrollHeight },
+        "*"
+      );
+    } catch (e) { /* ohne einbettende Seite nichts zu melden */ }
+  }
+
+  function mischen(liste) {
+    var a = liste.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+
+  function artName(art) { return art === "begriff" ? "Begriff" : "Definition"; }
+
+  function zeigeMeldung(satz, zusatz, ergebnis) {
+    el("satz").textContent = satz;
+    el("zusatz").textContent = zusatz || "";
+    el("zusatz").hidden = !zusatz;
+    el("ergebnis").textContent = ergebnis || "";
+    el("ergebnis").hidden = !ergebnis;
+  }
+
+  function zeigeZaehler() {
+    el("zaehler").textContent =
+      "Versuche: " + versuche + " · Paare: " + gefunden + " von " + DATEN.paare.length;
+  }
+
+  function zeichneKarte(i) {
+    var k = karten[i];
+    var b = knoepfe[i];
+    b.textContent = "";
+    if (k.status === "zu") {
+      b.className = "karte zu";
+      b.textContent = String(i + 1);
+      b.setAttribute("aria-label", "Karte " + (i + 1) + ", verdeckt");
+      b.removeAttribute("aria-disabled");
+      return;
+    }
+    b.className = "karte " + k.status + " " + k.art;
+    var art = document.createElement("span");
+    art.className = "art";
+    art.textContent = (k.status === "gefunden" ? "✓ " : "") + artName(k.art);
+    var inhalt = document.createElement("span");
+    inhalt.className = "inhalt";
+    inhalt.textContent = k.text;
+    b.appendChild(art);
+    b.appendChild(inhalt);
+    b.setAttribute(
+      "aria-label",
+      "Karte " + (i + 1) + ", " + artName(k.art) + ": " + k.text +
+      (k.status === "gefunden" ? ", Paar gefunden" : ", aufgedeckt")
+    );
+    if (k.status === "gefunden") { b.setAttribute("aria-disabled", "true"); }
+    else { b.removeAttribute("aria-disabled"); }
+  }
+
+  function tragePaarEin(p) {
+    var li = document.createElement("li");
+    var name = document.createElement("span");
+    name.className = "name";
+    name.textContent = p.begriff;
+    var def = document.createElement("span");
+    def.textContent = p.definition;
+    var neben = document.createElement("span");
+    neben.className = "neben";
+    neben.textContent = "Typische Verwechslung: " + p.verwechslung + " · Fundstelle: " + p.fundstelle;
+    li.appendChild(name);
+    li.appendChild(def);
+    li.appendChild(neben);
+    el("paare").appendChild(li);
+    el("gefundenBereich").hidden = false;
+  }
+
+  function werteAus(a, b) {
+    var ka = karten[a], kb = karten[b];
+    var pa = DATEN.paare[ka.paar], pb = DATEN.paare[kb.paar];
+    versuche++;
+
+    if (ka.paar === kb.paar) {
+      ka.status = "gefunden";
+      kb.status = "gefunden";
+      gefunden++;
+      zeichneKarte(a);
+      zeichneKarte(b);
+      tragePaarEin(pa);
+      var ende = "";
+      if (gefunden === DATEN.paare.length) {
+        ende = "Alle " + gefunden + " Paare gefunden. Sie haben " + versuche +
+          (versuche === 1 ? " Versuch" : " Versuche") + " gebraucht.";
+      }
+      zeigeMeldung(
+        "Richtig, das ist ein Paar: Die aufgedeckte Definition beschreibt genau „" + pa.begriff + "“.",
+        "Definition: " + pa.definition,
+        ende
+      );
+      return;
+    }
+
+    var satz;
+    if (ka.art === "begriff" && kb.art === "begriff") {
+      satz = "Kein Paar: „" + pa.begriff + "“ und „" + pb.begriff +
+        "“ sind beide Begriffe; zu einem Paar gehören ein Begriff und seine Definition.";
+    } else if (ka.art === "definition" && kb.art === "definition") {
+      satz = "Kein Paar: Sie haben zwei Definitionen aufgedeckt; sie beschreiben „" +
+        pa.begriff + "“ und „" + pb.begriff + "“.";
+    } else {
+      var pBegriff = ka.art === "begriff" ? pa : pb;
+      var pDefinition = ka.art === "definition" ? pa : pb;
+      satz = "Kein Paar: Diese Definition beschreibt „" + pDefinition.begriff +
+        "“ und nicht „" + pBegriff.begriff + "“.";
+    }
+    zuDecken = [a, b];
+    zeigeMeldung(satz, "Wählen Sie die nächste Karte; die beiden Karten werden dann wieder verdeckt.", "");
+  }
+
+  function waehle(i) {
+    if (zuDecken.length) {
+      zuDecken.forEach(function (j) {
+        karten[j].status = "zu";
+        zeichneKarte(j);
+      });
+      zuDecken = [];
+    }
+    var k = karten[i];
+    if (k.status !== "zu") { return; }
+
+    k.status = "offen";
+    zeichneKarte(i);
+    offen.push(i);
+
+    if (offen.length === 1) {
+      zeigeMeldung(
+        "Karte " + (i + 1) + " aufgedeckt (" + artName(k.art) + "). Decken Sie eine zweite Karte auf.",
+        "", ""
+      );
+    } else {
+      var a = offen[0], b = offen[1];
+      offen = [];
+      werteAus(a, b);
+    }
+    zeigeZaehler();
+    meldeHoehe();
+  }
+
+  function neuesSpiel() {
+    var stapel = [];
+    DATEN.paare.forEach(function (p, nr) {
+      stapel.push({ paar: nr, art: "begriff", text: p.begriff, status: "zu" });
+      stapel.push({ paar: nr, art: "definition", text: p.definition, status: "zu" });
+    });
+    karten = mischen(stapel);
+    knoepfe = [];
+    offen = [];
+    zuDecken = [];
+    versuche = 0;
+    gefunden = 0;
+
+    var feld = el("feld");
+    feld.textContent = "";
+    karten.forEach(function (k, i) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.addEventListener("click", function () { waehle(i); });
+      feld.appendChild(b);
+      knoepfe.push(b);
+      zeichneKarte(i);
+    });
+
+    el("paare").textContent = "";
+    el("gefundenBereich").hidden = true;
+    zeigeMeldung(
+      "Die " + karten.length + " Karten sind gemischt. Decken Sie die erste Karte auf.", "", ""
+    );
+    zeigeZaehler();
+    meldeHoehe();
+  }
+
+  el("titel").textContent = DATEN.titel;
+  document.title = DATEN.titel;
+  el("anleitung").textContent = DATEN.anleitung;
+  el("neu").addEventListener("click", neuesSpiel);
+  window.addEventListener("load", meldeHoehe);
+  window.addEventListener("resize", meldeHoehe);
+  neuesSpiel();
+})();
+</script>
+</body>
+</html>
